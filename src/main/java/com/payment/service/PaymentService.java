@@ -1,5 +1,7 @@
-package com.payment;
+package com.payment.service;
 
+import com.payment.model.Payment;
+import com.payment.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 

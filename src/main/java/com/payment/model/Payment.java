@@ -1,0 +1,32 @@
+package com.payment.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Getter
+@Setter
+public class Payment {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull
+    @Positive
+    private Double amount;
+
+    @NotNull
+    @Pattern(regexp = "KZT|USD|EUR|RUB")
+    private String currency;
+
+    private String description;
+
+    @NotNull
+    private String clientId;
+
+    private String status = "PENDING";
+
+}
