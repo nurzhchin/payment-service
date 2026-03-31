@@ -18,7 +18,7 @@ public class PaymentController {
     @PostMapping("/payments")
     public ResponseEntity<?> createPayment(@Valid @RequestBody Payment payment) {
         Payment created = service.createPayment(payment);
-        return ResponseEntity.ok(new PaymentResponse(created.getId().toString(), created.getStatus()));
+        return ResponseEntity.ok(new PaymentResponse(created.getId().toString(), created.getStatus().name()));
     }
 
     @GetMapping("/payments/{id}")
@@ -34,7 +34,7 @@ public class PaymentController {
     public ResponseEntity<?> confirmPayment(@PathVariable Long id) {
         try {
             Payment payment = service.confirmPayment(id);
-            return ResponseEntity.ok(new PaymentResponse(payment.getId().toString(), payment.getStatus()));
+            return ResponseEntity.ok(new PaymentResponse(payment.getId().toString(), payment.getStatus().name()));
         } catch (RuntimeException e) {
             if (e.getMessage().equals("NOT_FOUND")) return ResponseEntity.status(404).body("Payment not found");
             return ResponseEntity.status(400).body("Payment cannot be confirmed");
@@ -45,7 +45,7 @@ public class PaymentController {
     public ResponseEntity<?> cancelPayment(@PathVariable Long id) {
         try {
             Payment payment = service.cancelPayment(id);
-            return ResponseEntity.ok(new PaymentResponse(payment.getId().toString(), payment.getStatus()));
+            return ResponseEntity.ok(new PaymentResponse(payment.getId().toString(), payment.getStatus().name()));
         } catch (RuntimeException e) {
             if (e.getMessage().equals("NOT_FOUND")) return ResponseEntity.status(404).body("Payment not found");
             return ResponseEntity.status(400).body("Payment cannot be cancelled");
