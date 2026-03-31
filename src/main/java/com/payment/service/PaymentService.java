@@ -1,6 +1,7 @@
 package com.payment.service;
 
 import com.payment.model.Payment;
+import com.payment.model.PaymentStatus;
 import com.payment.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -15,7 +16,7 @@ public class PaymentService {
     }
 
     public Payment createPayment(Payment payment) {
-        payment.setStatus("PENDING");
+        payment.setStatus(PaymentStatus.PENDING);
         return repository.save(payment);
     }
 
@@ -26,19 +27,19 @@ public class PaymentService {
 
     public Payment confirmPayment(Long id) {
         Payment payment = getPayment(id);
-        if (!payment.getStatus().equals("PENDING")) {
+        if (payment.getStatus() != PaymentStatus.PENDING) {
             throw new RuntimeException("BAD_REQUEST");
         }
-        payment.setStatus("CONFIRMED");
+        payment.setStatus(PaymentStatus.CONFIRMED);
         return repository.save(payment);
     }
 
     public Payment cancelPayment(Long id) {
         Payment payment = getPayment(id);
-        if (!payment.getStatus().equals("PENDING")) {
+        if (payment.getStatus() != PaymentStatus.PENDING) {
             throw new RuntimeException("BAD_REQUEST");
         }
-        payment.setStatus("CANCELED");
+        payment.setStatus(PaymentStatus.CANCELED);;
         return repository.save(payment);
     }
 

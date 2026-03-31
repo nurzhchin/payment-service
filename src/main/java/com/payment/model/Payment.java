@@ -27,6 +27,7 @@ public class Payment {
     @NotNull
     private String clientId;
 
-    private String status = "PENDING";
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status = PaymentStatus.PENDING;
 
 }
