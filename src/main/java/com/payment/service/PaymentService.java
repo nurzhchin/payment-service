@@ -5,6 +5,8 @@ import com.payment.model.PaymentStatus;
 import com.payment.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import com.payment.exception.PaymentNotFoundException;
+import com.payment.exception.PaymentStateException;
 
 @Service
 public class PaymentService {
@@ -22,14 +24,12 @@ public class PaymentService {
 
     public Payment getPayment(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND"));
-    }
+                .orElseThrow(() -> new PaymentNotFoundException(id));    }
 
     public Payment confirmPayment(Long id) {
         Payment payment = getPayment(id);
         if (payment.getStatus() != PaymentStatus.PENDING) {
-            throw new RuntimeException("BAD_REQUEST");
-        }
+            throw new PaymentStateException(payment.getStatus().name());        }
         payment.setStatus(PaymentStatus.CONFIRMED);
         return repository.save(payment);
     }
@@ -37,8 +37,7 @@ public class PaymentService {
     public Payment cancelPayment(Long id) {
         Payment payment = getPayment(id);
         if (payment.getStatus() != PaymentStatus.PENDING) {
-            throw new RuntimeException("BAD_REQUEST");
-        }
+            throw new PaymentStateException(payment.getStatus().name());        }
         payment.setStatus(PaymentStatus.CANCELED);;
         return repository.save(payment);
     }
@@ -46,8 +45,7 @@ public class PaymentService {
     public List<Payment> getClientPayments(String clientId) {
         List<Payment> payments = repository.findByClientId(clientId);
         if (payments.isEmpty()) {
-            throw new RuntimeException("NOT_FOUND");
-        }
+            throw new RuntimeException("Client not found: " + clientId);       }
         return payments;
     }
 }
